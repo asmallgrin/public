@@ -1,0 +1,32 @@
+{
+  "name": "russellbuilding.net",
+  "version": "0.0.0",
+  "ignore": [
+    ".*",
+    "toastr.css",
+    "toastr.min.css"
+  ],
+  "dependencies": {
+    "jquery": "~1.9.0",
+    "underscore": "~1.4.3",
+    "backbone": "~1.0.0",
+    "requirejs": "~2.1.5",
+    "requirejs-text": "~2.0.5",
+    "modernizr": "~2.6.2",
+    "skeuocard": "latest",
+    "jquery-modal": "latest",
+    "jquery-popover": "latest",
+    "raty": "latest",
+    "moment": "latest",
+    "easytabs": "latest",
+    "toastr": "latest",
+    "raphael": "~2.1.2",
+    "socket.io-client": "~0.9.16",
+    "d3": "~3.3.5",
+    "nvd3": "~1.1.14-beta",
+    "hammerjs": "~1.0.5",
+    "gmaps": "~0.4.9",
+    "parsleyjs": "~1.2.3"
+  },
+  "devDependencies": {}
+}

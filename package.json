@@ -1,0 +1,12 @@
+{
+  "name": "bored-games",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "nodemon node app.js"
+  },
+  "dependencies": {
+    "express": "latest",
+    "jade": "latest"
+  }
+}
