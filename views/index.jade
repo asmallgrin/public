@@ -1,5 +1,9 @@
 extends layout-default
 
+block header
+  script(type='text/javascript', src='/components/jquery/jquery.min.js')
+  script(type='text/javascript', src='/js/index.js')
+
 block content
   div.section.group
     div.col.span_1_of_3
@@ -7,8 +11,12 @@ block content
       p Welcome to #{title}
     div.col.span_2_of_3
       div.rounded
-        h3 test
-        p this is a test
+        h3 log yourself in bitch - or register
+        label(for='email') name:
+        input(type='email')#email
+        label(for='password') password:
+        input(type='password')#password
+        input(type='submit')#login
 
 block footer
   div.section.group

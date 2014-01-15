@@ -1,12 +1,16 @@
+var Q = require('q');
 
-/*
- * GET home page.
- */
-
-exports.index = function(req, res){
-  res.render('index', { title: 'Express' });
+exports.index = function(req, res) {
+  if (!req.session.userVariable)
+    res.render('index', { title: 'Express' });
+  else
+    res.render('list', { title: 'Express' });
 };
 
-exports.game = function(req, res){
+exports.login = function (req, res) {
+
+}
+
+exports.game = function(req, res) {
   res.render('game', { title: 'Express' });
 };
