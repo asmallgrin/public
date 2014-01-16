@@ -15,6 +15,8 @@ var express = require('express'),
     sessionStore = new express.session.MemoryStore(),
     mongoose = require('mongoose').connect('mongodb://localhost/bg');
 
+var reversi = require('./games/reversi');
+
 var cookieParser = express.cookieParser(pkg.name);
 
 var sessionKey = 'wtf';
@@ -45,13 +47,6 @@ User.findOne({email: 'asmallgrin@gmail.com'}, function(err, user) {
 });
 */
 
-/*
-var admin = new User({ email: 'asmallgrin@gmail.com', md5pw: '098f6bcd4621d373cade4e832627b4f6' });
-admin.save(function (err) {
-  if (err) // ...
-  console.log('meow');
-});
-*/
 
 // all environments
 app.set('port', 3001);
@@ -89,10 +84,10 @@ app.post('/login', function(req, res) {
       ;
     } else if (user != null) {
       if (user.md5pw == req.body.password) {
-        req.session.userVariable = user;
+        req.session.userid = user.id;
       }
     }
-    res.end(req.session.userVariable ? 'success' : 'fail');    
+    res.end(req.session.userid ? 'success' : 'fail');    
   });
   
 });
@@ -130,11 +125,14 @@ io.set('authorization', function(data, accept) {
             }
             data.session = session;
             data.sessionID = data.signedCookies[sessionKey];
-            if (session.userVariable)
-              data.userVariable = session.userVariable;
+            
+
+
+            data.userid = (session.userid == null) ? "-1" : session.userid;
+            
             console.log(data.session);
             console.log(data.sessionID);
-            console.log(data.userVariable);
+            console.log(data.userid);
 
             accept(null, true);
         });
@@ -147,19 +145,32 @@ io.set('authorization', function(data, accept) {
 
 io.sockets.on('connection', function(socket) {
   
-  console.log(socket.handshake.sessionID);
-
   socket.on('join', function(data) {
 
     socket.room = data;
     socket.join(data);
 
-    console.log('joining room ' + data)
-    console.log(data.split("-")[0]);
-    console.log(data.split("-")[1]);
     Game.findOne({type: data.split("-")[0], gamenumber: data.split("-")[1]}, function (err, game) {
+
       if (game != null) {
-        socket.emit('gamestate', game.gamestate);
+        socket.emit('gamestate', { gamestate: game.gamestate, you: socket.handshake.userid, player1: game.player1, player2: game.player2, turn: game.turn } );
+      }
+    
+    });
+    // get gamestate
+
+    console.log(data);
+  });
+
+  socket.on('makemove', function(data) {
+
+    Game.findOne({type: socket.room.split("-")[0], gamenumber: socket.room.split("-")[1]}, function (err, game) {
+
+      if (game != null) {
+        console.log('making move');
+        reversi.makemove(game, socket.handshake.userid, data.x, data.y);
+        console.log('emitting gamestate');
+        io.sockets.in(socket.room).emit('gamestate', { gamestate: game.gamestate, you: socket.handshake.userid, player1: game.player1, player2: game.player2, turn: game.turn } );
       }
     
     });
